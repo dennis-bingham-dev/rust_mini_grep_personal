@@ -117,7 +117,7 @@ pub fn search_case_sensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str>
 
 pub fn search_case_insensitive<'contents>(query: &str, contents: &'contents str) -> Vec<&'contents str> {
     let query = query.to_lowercase();
-    let mut results = Vec::new();
+    let mut results = Vec::<&str>::new();
     
     for line in contents.lines() {
        if line.to_lowercase().contains(&query) {
@@ -127,6 +127,12 @@ pub fn search_case_insensitive<'contents>(query: &str, contents: &'contents str)
 
     results
 }
+
+// pub fn progress_bar(progress: f64, total: f64) {
+//    let progress_char = '>';
+//    let percent = 100 * (progress / total);
+//    Ok(())
+//}
 
 
 // TODO: Figure out how to move tests into their own file....
