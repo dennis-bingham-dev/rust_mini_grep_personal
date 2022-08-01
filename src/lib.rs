@@ -104,7 +104,7 @@ pub fn parse_true_or_false_argument(case_sensitive: &str) -> bool {
 }
 
 pub fn search_case_sensitive<'a>(query: &str, contents: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new();
+    let mut results = Vec::<&str>::new();
     
     for line in contents.lines() {
        if line.contains(&query) {
