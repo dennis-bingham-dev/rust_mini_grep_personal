@@ -60,7 +60,7 @@ impl Terms {
             return Err("missing file name...")
         }
         
-        if args.case_sensitive.to_lowercase() != "f" && args.case_sensitive.to_lowercase() != "t" {
+        if validate_case_sensitive_character(args.case_sensitive.clone()) {
             return Err("invalid case sensitive argument...")
         };
 
@@ -69,6 +69,10 @@ impl Terms {
         let case_sensitive = parse_true_or_false_argument(&args.case_sensitive.clone());
         Ok(Terms { query, file, case_sensitive })
     }
+}
+
+pub fn validate_case_sensitive_character(case_sensitive: String) -> bool {
+    return case_sensitive.to_lowercase() != "f" && case_sensitive.to_lowercase() != "t";
 }
 
 pub fn parse_true_or_false_argument(case_sensitive: &str) -> bool {
