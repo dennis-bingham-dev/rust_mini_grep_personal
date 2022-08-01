@@ -2,9 +2,7 @@ use std::{fs, error::Error };
 use clap::Parser;
 
 pub fn parse_args() -> Result<Args, Box<dyn Error>> {
-    let args = Args::parse(); 
-
-    Ok(args)
+    Ok(Args::parse())
 }
 
 pub fn run(terms: Terms) -> Result<(), Box<dyn Error>> {
@@ -52,23 +50,43 @@ impl Terms {
      * readability.
      */
     pub fn new(args: &Args) -> Result<Terms, &str> {
-        if args.query == "" {
-            return Err("missing query argument...")
+        if let Err(e) = validate_args(args) {
+            return Err(e);
         }
 
-        if args.file == "" {
-            return Err("missing file name...")
-        }
         
-        if validate_case_sensitive_character(args.case_sensitive.clone()) {
-            return Err("invalid case sensitive argument...")
-        };
-
-        let query = args.query.clone();
-        let file = args.file.clone();
-        let case_sensitive = parse_true_or_false_argument(&args.case_sensitive.clone());
-        Ok(Terms { query, file, case_sensitive })
+        Ok(create_terms_struct(args))
     }
+}
+
+pub fn create_terms_struct(args: &Args) -> Terms {
+    let (query, file, case_sensitive) = extract_terms_properties_from_args(args);
+    
+    Terms { query, file, case_sensitive }
+}
+
+
+pub fn extract_terms_properties_from_args(args: &Args) -> (String, String, bool) {
+    (args.query.clone(), args.file.clone(), parse_true_or_false_argument(&args.case_sensitive.clone()))
+}
+
+/**
+ * Validates command-line arguments before use.
+ */
+pub fn validate_args(args: &Args) -> Result<bool, &str> {
+    if args.query == "" {
+        return Err("missing query argument...")
+    }
+
+    if args.file == "" {
+        return Err("missing file name...")
+    }
+    
+    if validate_case_sensitive_character(args.case_sensitive.clone()) {
+        return Err("invalid case sensitive argument...")
+    };
+    
+    Ok(true)
 }
 
 pub fn validate_case_sensitive_character(case_sensitive: String) -> bool {
